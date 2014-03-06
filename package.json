@@ -1,0 +1,23 @@
+{
+  "name": "GuessWho",
+  "version": "0.0.0",
+  "description": "GuessWho",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/artraxus/GuessWho.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/artraxus/GuessWho/issues"
+  },
+  "homepage": "https://github.com/artraxus/GuessWho",
+  "dependencies": {
+    "express": "^3.4.8",
+    "socket.io": "^0.9.16"
+  }
+}
