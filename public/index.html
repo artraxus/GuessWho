@@ -1,26 +1,15 @@
-Hello world
-<input type="text" id="chatMessage" />
-<input type="button" value="Send" id="sendMessageButton"/>
-
-
-<div id="chat">
+<div id="index">
+    <input type="text" id="playerName" placeholder="your player name" />
+    <input type="button" value="Join a game" id="joinGameButton" />
 </div>
 
-
+<div id="game">
+    <input type="text" id="chatMessage" />
+    <input type="button" value="Send" id="sendMessageButton" />
+    <div id="chat">
+    </div>
+</div>
 
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script>
-    var socket = io.connect('http://localhost:8080');
-    socket.on('subscribeMessage', function (data) {
-        $("#chat").append("<span>" + data + "</span><br/>");
-    });
-
-    $(document).ready(function () {
-        $('#sendMessageButton').click(sendMessage);
-    });
-
-    function sendMessage() {
-        socket.emit('subscribeMessage', $("#chatMessage").val());
-    }
-</script>
+<script src="index.js"></script>
