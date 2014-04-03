@@ -23,6 +23,9 @@
         var playerName = $('#playerName').val();
         $.post(host + '/joingame', { playerName: playerName }).done(function (game) {
             gameId = game.id;
+            game.cards.forEach(function (card) {
+                $('#cardContainer').append('<img src="' + card.imgUrl + '" />');
+            });
             socket.emit('joingame', {
                 gameId: gameId,
                 playerName: playerName
