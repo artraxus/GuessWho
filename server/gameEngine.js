@@ -1,16 +1,28 @@
 var uuid = require('node-uuid');
 var fs = require('fs');
 var path = require('path');
+var utils = require('./utils.js');
 
 var __dirname = '.';
 var publicDirectory = 'public';
 
 function Game() {
+
+    // Returns a random cards from an array of cards or null if no cards
+    function getTargetCard(cards) {
+        if (cards != null && cards.length > 0) {
+            return cards[utils.getRandomInt(0, cards.length)];
+        }
+
+        return null;
+    }
+
     return {
         id: uuid.v4(),
         title: 'Game blblblb',
         players: [],
-        cards: getCards(5)
+        cards: getCards(5),
+        getTargetCard: getTargetCard
     };
 };
 
@@ -41,3 +53,4 @@ function getCards(cardCount) {
 }
 
 exports.Game = Game;
+exports.Player = Player;

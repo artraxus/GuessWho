@@ -23,30 +23,12 @@ app.post('/joingame', function (request, response) {
 
     var game = games[games.length - 1];
     var playerName = request.body.playerName;
-    game.players.push({ name: playerName });
+    var targetCard = game.getTargetCard(game.cards);
+    var player = new gameEngine.Player(playerName, targetCard);
+    game.players.push(player);
 
     response.send(game);
 });
-
-/*
-app.get('/games', function (request, response) {
-    response.send(games);
-});
-
-app.get('/games/:id', function (request, response) {
-    var i = 0;
-    while (games[i].id != request.params.id) {
-        i++;
-    }
-    response.send(games[i]);
-});
-
-app.post('/games', function (request, response) {
-    var game = new Game();
-    games.push(game);
-    response.send(game);
-});
-*/
 
 //app.listen(8080);
 console.log('server is running...');
