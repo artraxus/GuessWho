@@ -30,6 +30,23 @@ app.post('/joingame', function (request, response) {
     response.send(game);
 });
 
+app.get('/guess', function (request, response) {
+    var gameId = request.query.gameId;
+    var playerId = request.query.playerId;
+    var guessId = request.query.guessId;
+    var isWin = false;
+
+    var game = getGame(gameId);
+    var opponentPlayer = game.getOpponent(playerId, game.players);
+
+    if (opponentPlayer.targetCard == guessId) {
+        response.send('you win !!');
+    }
+    else {
+        response.send('bouh you loose');
+    }
+});
+
 //app.listen(8080);
 console.log('server is running...');
 
@@ -50,3 +67,14 @@ io.sockets.on('connection', function (socket) {
     });
     socket.on('leavegame', function (gameId) { socket.leave(gameId); });
 });
+
+// Returns the game with the specified Id or null if not found
+function getGame(id) {
+    for (var i = 0; i < games.length; i++) {
+        if (games[i].id == id) {
+            return games[i];
+        }
+    }
+
+    return null;
+};
