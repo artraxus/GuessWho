@@ -11,10 +11,19 @@ function Game() {
     // Returns a random cards from an array of cards or null if no cards
     function getTargetCard(cards) {
         if (cards != null && cards.length > 0) {
-            return cards[utils.getRandomInt(0, cards.length)];
+            var randomIndex = utils.getRandomInt(0, cards.length - 1);
+            return cards[randomIndex];
+        }
+        throw new Error('cards is null or empty');
+    }
+
+    // Returns the opponent of the player with the specified id
+    function getOpponent(id, players) {
+        if (players[0].id == id) {
+            return players[1];
         }
 
-        return null;
+        return players[0];
     }
 
     return {
@@ -22,14 +31,16 @@ function Game() {
         title: 'Game blblblb',
         players: [],
         cards: getCards(5),
-        getTargetCard: getTargetCard
+        getTargetCard: getTargetCard,
+        getOpponent: getOpponent
     };
 };
 
-function Player(name) {
+function Player(name, targetCard) {
     return {
+        id: uuid.v4(),
         name: name,
-        targetCard: null
+        targetCard: targetCard
     };
 }
 
