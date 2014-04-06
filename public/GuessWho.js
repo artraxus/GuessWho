@@ -6,6 +6,16 @@ var GuessWho= {};
     GW.socketIO = io.connect(host);    
 })(GuessWho);
 
+// Card Object
+(function(GW){
+    GW.Card = function(data){
+		var _self = this;
+		//properties
+		_self.url = data.imgUrl;
+		_self.enable = true;
+	};
+})(GuessWho);
+
 // LogInViewModel
 (function (GW) {
   var host = 'http://localhost:8080';
@@ -23,21 +33,21 @@ var GuessWho= {};
 			.done(function (game) {		
 				gameId = game.id;
 				game.cards.forEach(function (card) {
-					$('#cardContainer').append('<img src="' + card.imgUrl + '" class="img-thumbnail"/>');
-				});
+					GW.gameViewModel.cards.push(new GW.Card(card));					
+					});
             GW.socketIO.emit('joingame', {
                 gameId: gameId,
                 playerName: playerName
             });
 			
 			// must be handling by routing framework...
-			GW.GameViewModel.isVisible(true);			
+			GW.gameViewModel.isVisible(true);			
 			_self.isVisible(false);
         });
     };	
  };
  
-GW.LogInViewModel = new LogInViewModel(); 
+GW.logInViewModel = new LogInViewModel(); 
 })(GuessWho);
 
 // GameViewModel
@@ -48,6 +58,7 @@ GW.LogInViewModel = new LogInViewModel();
 		// properties	
 		_self.isVisible = ko.observable(false);
 		_self.messages = ko.observableArray([]);
+		_self.cards = ko.observableArray([]);
 		
 		//commands	
 		_self.sendMessage = function(){
@@ -60,6 +71,16 @@ GW.LogInViewModel = new LogInViewModel();
         });
 		};
 		
+		_self.toggleImage = function(card, event){
+		if(card.enable){
+		event.target.style.opacity = 0.2;
+		}
+		else{
+		event.target.style.opacity = 1;
+		}
+		card.enable = !card.enable;
+		};
+		
 		 GW.socketIO.on('subscribeMessage', function (data) {
         _self.messages.push(data);
     });  
@@ -67,7 +88,7 @@ GW.LogInViewModel = new LogInViewModel();
 		
 	 };
 	 
-	GW.GameViewModel = new GameViewModel(); 
+	GW.gameViewModel = new GameViewModel(); 
 })(GuessWho);
 
 ko.applyBindings(GuessWho);
