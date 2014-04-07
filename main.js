@@ -30,23 +30,6 @@ app.post('/joingame', function (request, response) {
     response.send({ gameId: game.id, playerId: player.id, cards: game.cards, targetCard: targetCard, playerNames: game.players.map(function (p) { return p.name; }) });
 });
 
-app.get('/guess', function (request, response) {
-    var gameId = request.query.gameId;
-    var playerId = request.query.playerId;
-    var guessId = request.query.guessId;
-    var isWin = false;
-
-    var game = getGame(gameId);
-    var opponentPlayer = game.getOpponent(playerId, game.players);
-
-    if (opponentPlayer.targetCard == guessId) {
-        response.send('you win !!');
-    }
-    else {
-        response.send('bouh you loose');
-    }
-});
-
 //app.listen(8080);
 console.log('server is running...');
 
@@ -56,15 +39,34 @@ server.listen(8080);
 
 io.sockets.on('connection', function (socket) {
     socket.on('subscribeMessage', function (data) {
-        socket.get('playerName', function (err, playerName) {
-            socket.broadcast.to(data.gameId).emit('subscribeMessage', playerName + ': ' + data.message);
+        socket.get('playerData', function (err, playerData) {
+            socket.broadcast.to(data.gameId).emit('subscribeMessage', playerData.playerName + ': ' + data.message);
         });
     });
     socket.on('joingame', function (data) {
         socket.join(data.gameId);
-        socket.set('gameId', data.gameId);
-        socket.set('playerName', data.playerName);
+        socket.set('playerData', data);
         socket.broadcast.to(data.gameId).emit('playerJoin', data.playerName);
+    });
+    socket.on('guess', function (guessName) {
+        console.log('guessName ' + guessName);
+        socket.get('playerData', function (err, data) {
+            var game = getGame(data.gameId);
+            var opponentPlayer = game.getOpponent(data.playerId, game.players);
+
+            console.log('opponentPlayer ' + opponentPlayer.name);
+
+            console.log('indexof ' + opponentPlayer.targetCard.imgUrl.indexOf(guessName));
+
+            if (opponentPlayer.targetCard.imgUrl.indexOf(guessName) >= 0) {
+                socket.emit('guess', 'you win !!');
+                socket.broadcast.to(data.gameId).emit('guess', 'You LOOSE ');
+            }
+            else {
+                socket.emit('guess', 'LOOZER');
+                socket.broadcast.to(data.gameId).emit('guess', 'You winn');
+            }
+        });
     });
 });
 

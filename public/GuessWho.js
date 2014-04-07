@@ -36,6 +36,7 @@ var GuessWho = {};
                     });
                     GW.socketIO.emit('joingame', {
                         gameId: data.gameId,
+                        playerId: data.playerId,
                         playerName: playerName
                     });
 
@@ -68,6 +69,7 @@ var GuessWho = {};
         _self.cards = ko.observableArray([]);
         _self.targetCard = ko.observable({});
         _self.playerNames = ko.observableArray([]);
+        _self.guessName = ko.observable('');
 
         //commands	
         _self.sendMessage = function () {
@@ -78,6 +80,9 @@ var GuessWho = {};
                 gameId: _self.gameId,
                 message: msgContent
             });
+        };
+        _self.sendGuess = function () {
+            GW.socketIO.emit('guess', _self.guessName());
         };
 
         _self.toggleImage = function (card, event) {
@@ -96,6 +101,10 @@ var GuessWho = {};
 
         GW.socketIO.on('playerJoin', function (playerName) {
             _self.playerNames.push(playerName);
+        });
+
+        GW.socketIO.on('guess', function (message) {
+            alert(message);
         });
 
 
