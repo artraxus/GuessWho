@@ -40,14 +40,16 @@
 					<img data-bind="attr:{src:url}, click:$parent.toggleImage"></img>
 				</div>
 		</div>
-		<div class="col-md-4">
-			<input type="text" id="chatMessage" />
-			<button  id="sendMessageButton" data-bind='click: sendMessage'  class='btn btn-primary'>Send</button>
-			<ul data-bind="foreach:messages">
-				<li data-bind="text:$data"></li>
-			</ul>
-			<div id="chat"></div>
-		</div>		
+	    <div class="col-md-4">
+	        <img data-bind="attr: { src: targetCard().url }" />
+	        <br/>
+	        <input type="text" id="chatMessage" />
+	        <button  id="sendMessageButton" data-bind='click: sendMessage'  class='btn btn-primary'>Send</button>
+	        <ul data-bind="foreach:messages">
+	            <li data-bind="text:$data"></li>
+	        </ul>
+	        <div id="chat"></div>
+	    </div>		
 	</div>
 </div>
 </div>

@@ -27,7 +27,7 @@ app.post('/joingame', function (request, response) {
     var player = new gameEngine.Player(playerName, targetCard);
     game.players.push(player);
 
-    response.send(game);
+    response.send({ gameId: game.id, playerId: player.id, cards: game.cards, targetCard: targetCard });
 });
 
 app.get('/guess', function (request, response) {
