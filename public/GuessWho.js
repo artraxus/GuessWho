@@ -40,8 +40,14 @@ var GuessWho = {};
                     });
 
                     // must be handling by routing framework...
+                    GW.gameViewModel.gameId = data.gameId;
                     GW.gameViewModel.isVisible(true);
                     GW.gameViewModel.targetCard(new GW.Card(data.targetCard));
+
+                    data.playerNames.forEach(function (pName) {
+                        GW.gameViewModel.playerNames.push(pName);
+                    });
+
                     _self.isVisible(false);
                 });
         };
@@ -56,10 +62,12 @@ var GuessWho = {};
         var _self = this;
 
         // properties	
+        _self.gameId = null;
         _self.isVisible = ko.observable(false);
         _self.messages = ko.observableArray([]);
         _self.cards = ko.observableArray([]);
         _self.targetCard = ko.observable({});
+        _self.playerNames = ko.observableArray([]);
 
         //commands	
         _self.sendMessage = function () {
@@ -67,7 +75,7 @@ var GuessWho = {};
             $("#chatMessage").val("");
             _self.messages.push("moi: " + msgContent);
             GW.socketIO.emit('subscribeMessage', {
-                gameId: gameId,
+                gameId: _self.gameId,
                 message: msgContent
             });
         };
@@ -84,6 +92,10 @@ var GuessWho = {};
 
         GW.socketIO.on('subscribeMessage', function (data) {
             _self.messages.push(data);
+        });
+
+        GW.socketIO.on('playerJoin', function (playerName) {
+            _self.playerNames.push(playerName);
         });
 
 

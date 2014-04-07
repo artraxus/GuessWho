@@ -27,7 +27,7 @@ app.post('/joingame', function (request, response) {
     var player = new gameEngine.Player(playerName, targetCard);
     game.players.push(player);
 
-    response.send({ gameId: game.id, playerId: player.id, cards: game.cards, targetCard: targetCard });
+    response.send({ gameId: game.id, playerId: player.id, cards: game.cards, targetCard: targetCard, playerNames: game.players.map(function (p) { return p.name; }) });
 });
 
 app.get('/guess', function (request, response) {
@@ -64,8 +64,8 @@ io.sockets.on('connection', function (socket) {
         socket.join(data.gameId);
         socket.set('gameId', data.gameId);
         socket.set('playerName', data.playerName);
+        socket.broadcast.to(data.gameId).emit('playerJoin', data.playerName);
     });
-    socket.on('leavegame', function (gameId) { socket.leave(gameId); });
 });
 
 // Returns the game with the specified Id or null if not found

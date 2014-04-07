@@ -43,6 +43,10 @@
 	    <div class="col-md-4">
 	        <img data-bind="attr: { src: targetCard().url }" />
 	        <br/>
+	        <span>Players:</span>
+	        <ul data-bind="foreach: playerNames">
+	            <li data-bind="text: $data"></li>
+	        </ul>
 	        <input type="text" id="chatMessage" />
 	        <button  id="sendMessageButton" data-bind='click: sendMessage'  class='btn btn-primary'>Send</button>
 	        <ul data-bind="foreach:messages">
