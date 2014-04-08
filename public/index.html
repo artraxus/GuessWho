@@ -39,8 +39,8 @@
             <div class="col-md-8">
                 <h2>Your board:</h2>
                 <div data-bind="foreach: cards">
-                    <span class="card" data-bind="event: { mouseover: $parent.onCardHover, mouseout: $parent.onCardOut }">
-                        <img class="card-img" data-bind="attr: { src: url }, click: $parent.toggleImage" />
+                    <span class="card" data-bind="event: { mouseover: $parent.onCardHover, mouseout: $parent.onCardOut }, attr: { 'id': id }">
+                        <img class="card-img" data-bind="attr: { src: url }, click: $parent.onCardClick" />
                     </span>
                 </div>
                 <div>
@@ -60,8 +60,10 @@
                 </div>
                 <h4>I think my card is:</h4>
                 <div>
-                    <input id="guessName" type="text" placeholder="I think his name is ..." data-bind='value: guessName' />
-                    <button id="guessButton" data-bind='click: sendGuess'>Guess</button>
+                    <button id="guessButton" class='btn btn-success' data-bind='visible: !isGuessing(), click: onGuessClick'>Guess</button>
+                    <span data-bind="visible: isGuessing">Click on the person you think you are !</span>
+                    <br/>
+                    <button id="guessButtonCancel" class='btn btn-danger' data-bind='visible: isGuessing, click: onGuessCancelClick'>Cancel</button>
                 </div>
                 <h4>Messages:</h4>
                 <div>

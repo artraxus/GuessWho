@@ -48,23 +48,18 @@ io.sockets.on('connection', function (socket) {
         socket.set('playerData', data);
         socket.broadcast.to(data.gameId).emit('playerJoin', data.playerName);
     });
-    socket.on('guess', function (guessName) {
-        console.log('guessName ' + guessName);
+    socket.on('guess', function (guessId) {
         socket.get('playerData', function (err, data) {
             var game = getGame(data.gameId);
             var opponentPlayer = game.getOpponent(data.playerId, game.players);
 
-            console.log('opponentPlayer ' + opponentPlayer.name);
-
-            console.log('indexof ' + opponentPlayer.targetCard.imgUrl.indexOf(guessName));
-
-            if (opponentPlayer.targetCard.imgUrl.indexOf(guessName) >= 0) {
+            if (opponentPlayer.targetCard.id == guessId) {
                 socket.emit('guess', 'you win !!');
                 socket.broadcast.to(data.gameId).emit('guess', 'You LOOSE ');
             }
             else {
                 socket.emit('guess', 'LOOZER');
-                socket.broadcast.to(data.gameId).emit('guess', 'You winn');
+                socket.broadcast.to(data.gameId).emit('guess', 'You win');
             }
         });
     });

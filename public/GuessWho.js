@@ -11,6 +11,7 @@ var host = window.location.origin;
     GW.Card = function (data) {
         var _self = this;
         //properties
+        _self.id = data.id;
         _self.name = data.name;
         _self.url = data.imgUrl;
         _self.enable = true;
@@ -70,6 +71,7 @@ var host = window.location.origin;
         _self.playerNames = ko.observableArray([]);
         _self.guessName = ko.observable('');
         _self.hoverName = ko.observable('');
+        _self.isGuessing = ko.observable(false);
 
         //commands	
         _self.sendMessage = function () {
@@ -86,18 +88,26 @@ var host = window.location.origin;
                 });
             }
         };
-        _self.sendGuess = function () {
-            GW.socketIO.emit('guess', _self.guessName());
+
+        _self.onGuessClick = function () {
+            _self.isGuessing(true);
         };
 
-        _self.toggleImage = function (card, event) {
-            if (card.enable) {
-                event.target.style.opacity = 0.2;
+        _self.onGuessCancelClick = function () {
+            _self.isGuessing(false);
+        };
+
+        _self.onCardClick = function (card, event) {
+            if (_self.isGuessing()) {
+                GW.socketIO.emit('guess', this.id);
+            } else {
+                if (card.enable) {
+                    event.target.style.opacity = 0.2;
+                } else {
+                    event.target.style.opacity = null;
+                }
+                card.enable = !card.enable;
             }
-            else {
-                event.target.style.opacity = null;
-            }
-            card.enable = !card.enable;
         };
 
         _self.onCardHover = function (card) {
