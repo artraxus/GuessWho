@@ -30,7 +30,7 @@ function Game() {
         id: uuid.v4(),
         title: 'Game blblblb',
         players: [],
-        cards: getCards(5),
+        cards: getCards(24),
         getTargetCard: getTargetCard,
         getOpponent: getOpponent
     };
@@ -52,15 +52,15 @@ function Card(imgUrl) {
 }
 
 function getCards(cardCount) {
-    var cardsDirectory = path.join(__dirname, publicDirectory, 'cards');
-    var cardPaths = fs.readdirSync(cardsDirectory);
-    var cards = [];
+    var fileContent = fs.readFileSync('server/database.txt', { encoding: 'utf8' });
+    var cards = JSON.parse(fileContent);
+    var cardsDeck = [];
 
     for (var i = 0; i < cardCount; i++) {
-        cards.push(new Card(path.join('cards', cardPaths[i])));
+        cardsDeck.push(cards.splice(utils.getRandomInt(0, cards.length - 1), 1)[0]);
     }
 
-    return cards;
+    return cardsDeck;
 }
 
 exports.Game = Game;
