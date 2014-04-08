@@ -65,7 +65,7 @@
                 </div>
                 <h4>Messages:</h4>
                 <div>
-                    <input type="text" id="chatMessage" />
+                    <input type="text" id="chatMessage" data-bind="event: { keypress: onChatKeyPress }" />
                     <button id="sendMessageButton" data-bind='click: sendMessage' class='btn btn-primary'>Send</button>
                     <ul id="messagesContainer" data-bind="foreach: messages">
                         <li tabindex="1" data-bind="text: $data"></li>

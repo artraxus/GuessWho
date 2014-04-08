@@ -1,8 +1,8 @@
 var GuessWho = {};
+var host = window.location.origin;
 
 // socketIO
 (function (GW) {
-    var host = 'http://localhost:8080';
     GW.socketIO = io.connect(host);
 })(GuessWho);
 
@@ -19,8 +19,6 @@ var GuessWho = {};
 
 // LogInViewModel
 (function (GW) {
-    var host = 'http://localhost:8080';
-
     var LogInViewModel = function () {
         var _self = this;
         // properties
@@ -78,7 +76,7 @@ var GuessWho = {};
             var msgContent = $("#chatMessage").val();
             $("#chatMessage").val("");
 
-            if (msgContent !=null && msgContent.trim() != '') {
+            if (msgContent != null && msgContent.trim() != '') {
                 _self.messages.push("moi: " + msgContent);
                 resetFocusOnChat();
 
@@ -102,12 +100,22 @@ var GuessWho = {};
             card.enable = !card.enable;
         };
 
-        _self.onCardHover = function(card) {
+        _self.onCardHover = function (card) {
             _self.hoverName(card.name);
         };
 
-        _self.onCardOut = function() {
+        _self.onCardOut = function () {
             _self.hoverName('');
+        };
+
+        _self.onChatKeyPress = function (data, event) {
+            if (event.keyCode == 13) {
+                _self.sendMessage();
+                $("#chatMessage").focus();
+                return false;
+            }
+
+            return true;
         };
 
         GW.socketIO.on('subscribeMessage', function (data) {
@@ -125,8 +133,7 @@ var GuessWho = {};
 
         function resetFocusOnChat() {
             $('#messagesContainer li').last().addClass('active-li').focus();
-        }
-
+        };
     };
 
     GW.gameViewModel = new GameViewModel();
