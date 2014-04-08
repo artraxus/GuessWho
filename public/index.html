@@ -37,6 +37,7 @@
     <div data-bind='visible: isVisible'>
         <div class="row">
             <div class="col-md-8">
+                <h2>Your board:</h2>
                 <div data-bind="foreach: cards">
                     <span class="card" data-bind="event: { mouseover: $parent.onCardHover, mouseout: $parent.onCardOut }">
                         <img class="card-img" data-bind="attr: { src: url }, click: $parent.toggleImage" />
@@ -47,20 +48,30 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <img data-bind="attr: { src: targetCard().url }" />
-                <br />
-                <span>Players:</span>
+                <h4>Players connected:</h4>
                 <ul data-bind="foreach: playerNames">
                     <li data-bind="text: $data"></li>
                 </ul>
-                <input type="text" id="chatMessage" />
-                <button id="sendMessageButton" data-bind='click: sendMessage' class='btn btn-primary'>Send</button>
-                <ul data-bind="foreach: messages">
-                    <li data-bind="text: $data"></li>
-                </ul>
-                <div id="chat"></div>
-                <input id="guessName" type="text" placeholder="I think his name is ..." data-bind='value: guessName' />
-                <button id="guessButton" data-bind='click: sendGuess'>Guess</button>
+                <h4>Your opponent needs to find:</h4>
+                <div>
+                    <img data-bind="attr: { src: targetCard().url }" />
+                    <br />
+                    <span data-bind="text: targetCard().name"></span>
+                </div>
+                <h4>I think my card is:</h4>
+                <div>
+                    <input id="guessName" type="text" placeholder="I think his name is ..." data-bind='value: guessName' />
+                    <button id="guessButton" data-bind='click: sendGuess'>Guess</button>
+                </div>
+                <h4>Messages:</h4>
+                <div>
+                    <input type="text" id="chatMessage" />
+                    <button id="sendMessageButton" data-bind='click: sendMessage' class='btn btn-primary'>Send</button>
+                    <ul id="messagesContainer" data-bind="foreach: messages">
+                        <li tabindex="1" data-bind="text: $data"></li>
+                    </ul>
+                    <div id="chat"></div>
+                </div>
             </div>
         </div>
     </div>

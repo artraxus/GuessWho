@@ -77,11 +77,16 @@ var GuessWho = {};
         _self.sendMessage = function () {
             var msgContent = $("#chatMessage").val();
             $("#chatMessage").val("");
-            _self.messages.push("moi: " + msgContent);
-            GW.socketIO.emit('subscribeMessage', {
-                gameId: _self.gameId,
-                message: msgContent
-            });
+
+            if (msgContent !=null && msgContent.trim() != '') {
+                _self.messages.push("moi: " + msgContent);
+                resetFocusOnChat();
+
+                GW.socketIO.emit('subscribeMessage', {
+                    gameId: _self.gameId,
+                    message: msgContent
+                });
+            }
         };
         _self.sendGuess = function () {
             GW.socketIO.emit('guess', _self.guessName());
@@ -107,6 +112,7 @@ var GuessWho = {};
 
         GW.socketIO.on('subscribeMessage', function (data) {
             _self.messages.push(data);
+            resetFocusOnChat();
         });
 
         GW.socketIO.on('playerJoin', function (playerName) {
@@ -117,6 +123,9 @@ var GuessWho = {};
             alert(message);
         });
 
+        function resetFocusOnChat() {
+            $('#messagesContainer li').last().addClass('active-li').focus();
+        }
 
     };
 

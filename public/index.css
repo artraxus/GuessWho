@@ -6,3 +6,8 @@
 #hoverName {
     text-align: center;
 }
+
+#messagesContainer {
+    height: 400px;
+    overflow: auto;
+}
