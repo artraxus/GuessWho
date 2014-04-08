@@ -40,6 +40,13 @@ var host = window.location.origin;
                         playerName: playerName
                     });
 
+                    if (data.playerNames.length > 1) {
+                        GW.socketIO.emit('gameReady', {
+                            gameId: data.gameId
+                        });
+                        GW.gameViewModel.isReady(true);
+                    }
+
                     // must be handling by routing framework...
                     GW.gameViewModel.gameId = data.gameId;
                     GW.gameViewModel.isVisible(true);
@@ -50,6 +57,7 @@ var host = window.location.origin;
                     });
 
                     _self.isVisible(false);
+
                 });
         };
     };
@@ -72,6 +80,7 @@ var host = window.location.origin;
         _self.guessName = ko.observable('');
         _self.hoverName = ko.observable('');
         _self.isGuessing = ko.observable(false);
+        _self.isReady = ko.observable(false);
 
         //commands	
         _self.sendMessage = function () {
@@ -139,6 +148,10 @@ var host = window.location.origin;
 
         GW.socketIO.on('guess', function (message) {
             alert(message);
+        });
+
+        GW.socketIO.on('gameReady', function () {
+            _self.isReady(true);
         });
 
         function resetFocusOnChat() {

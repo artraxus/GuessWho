@@ -34,7 +34,7 @@
 
 <!------------------------------ Game view -->
 <div id="index" class='container' data-bind='with: gameViewModel'>
-    <div data-bind='visible: isVisible'>
+    <div data-bind='visible: isVisible() && isReady()'>
         <div class="row">
             <div class="col-md-8">
                 <h2>Your board:</h2>
@@ -62,7 +62,7 @@
                 <div>
                     <button id="guessButton" class='btn btn-success' data-bind='visible: !isGuessing(), click: onGuessClick'>Guess</button>
                     <span data-bind="visible: isGuessing">Click on the person you think you are !</span>
-                    <br/>
+                    <br />
                     <button id="guessButtonCancel" class='btn btn-danger' data-bind='visible: isGuessing, click: onGuessCancelClick'>Cancel</button>
                 </div>
                 <h4>Messages:</h4>
@@ -75,6 +75,13 @@
                     <div id="chat"></div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div data-bind='visible: isVisible() && !isReady()'>
+        <div class="row">
+            <img src="http://37.media.tumblr.com/tumblr_m4h7uaq5iy1rwcc6bo1_400.gif" />
+            <br />
+            <span>Waiting for an opponent...</span>
         </div>
     </div>
 </div>

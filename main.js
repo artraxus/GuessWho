@@ -63,11 +63,15 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });
+
+    socket.on('gameReady', function (data) {
+        socket.broadcast.to(data.gameId).emit('gameReady');
+    });
 });
 
 // Returns the game with the specified Id or null if not found
 function getGame(id) {
-    for (var i = 0; i < games.length; i++) {
+    for (var i = 0, length = games.length; i < length ; i++) {
         if (games[i].id == id) {
             return games[i];
         }
