@@ -11,6 +11,7 @@ var GuessWho = {};
     GW.Card = function (data) {
         var _self = this;
         //properties
+        _self.name = data.name;
         _self.url = data.imgUrl;
         _self.enable = true;
     };
@@ -70,6 +71,7 @@ var GuessWho = {};
         _self.targetCard = ko.observable({});
         _self.playerNames = ko.observableArray([]);
         _self.guessName = ko.observable('');
+        _self.hoverName = ko.observable('');
 
         //commands	
         _self.sendMessage = function () {
@@ -90,9 +92,17 @@ var GuessWho = {};
                 event.target.style.opacity = 0.2;
             }
             else {
-                event.target.style.opacity = 1;
+                event.target.style.opacity = null;
             }
             card.enable = !card.enable;
+        };
+
+        _self.onCardHover = function(card) {
+            _self.hoverName(card.name);
+        };
+
+        _self.onCardOut = function() {
+            _self.hoverName('');
         };
 
         GW.socketIO.on('subscribeMessage', function (data) {

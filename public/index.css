@@ -1,0 +1,8 @@
+.card:hover .card-img
+{
+    opacity: 0.5;
+}
+
+#hoverName {
+    text-align: center;
+}

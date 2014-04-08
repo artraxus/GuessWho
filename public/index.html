@@ -1,70 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Guess Who @TalentSoft</title>
-	<!-- mobile first -->	
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Guess Who @TalentSoft</title>
+    <!-- mobile first -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- CDN Css -->
-	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CDN Css -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
 </head>
 
 <!------------------------------ Welcome view -->
-<div id="index" class='container' data-bind='with:logInViewModel'>
-<div data-bind='visible:isVisible'>
-	<div class='row'>
-		<div class='col-md-4'></div>
-		<div class='col-md-4'>
-			<img src='http://media2.apnonline.com.au/img/media/images/2012/04/27/WDN_28-04-2012_FRONT_PAGE_01_ETCH-WAR260412GUESSWHO_t460.jpg' />
-			<h1>Guess Who?</h1>
-		</div>
-		<div class='col-md-4'></div>
-	</div>
-	<div class='row'>
-		<div class='col-md-4'></div>
-		<div class='col-md-4'>
-			<input type="text" id="playerName" data-bind="value: username" placeholder='Choose a username...' />
-			<button  id="joinGameButton" data-bind='click: joinGame'  class='btn btn-primary'>Join a game</button>
-		</div>
-		<div class='col-md-4'></div>
-	</div>
-</div>
+<div id="index" class='container' data-bind='with: logInViewModel'>
+    <div data-bind='visible: isVisible'>
+        <div class='row'>
+            <div class='col-md-4'></div>
+            <div class='col-md-4'>
+                <img src='http://media2.apnonline.com.au/img/media/images/2012/04/27/WDN_28-04-2012_FRONT_PAGE_01_ETCH-WAR260412GUESSWHO_t460.jpg' />
+                <h1>Guess Who?</h1>
+            </div>
+            <div class='col-md-4'></div>
+        </div>
+        <div class='row'>
+            <div class='col-md-4'></div>
+            <div class='col-md-4'>
+                <input type="text" id="playerName" data-bind="value: username" placeholder='Choose a username...' />
+                <button id="joinGameButton" data-bind='click: joinGame' class='btn btn-primary'>Join a game</button>
+            </div>
+            <div class='col-md-4'></div>
+        </div>
+    </div>
 </div>
 
 <!------------------------------ Game view -->
-<div id="index" class='container' data-bind='with:gameViewModel'>
-<div data-bind='visible:isVisible'>
-	<div class="row">
-		<div class="col-md-8">
-				<div data-bind="foreach:cards">
-					<img data-bind="attr:{src:url}, click:$parent.toggleImage"></img>
-				</div>
-		</div>
-	    <div class="col-md-4">
-	        <img data-bind="attr: { src: targetCard().url }" />
-	        <br/>
-	        <span>Players:</span>
-	        <ul data-bind="foreach: playerNames">
-	            <li data-bind="text: $data"></li>
-	        </ul>
-	        <input type="text" id="chatMessage" />
-	        <button  id="sendMessageButton" data-bind='click: sendMessage' class='btn btn-primary'>Send</button>
-	        <ul data-bind="foreach:messages">
-	            <li data-bind="text:$data"></li>
-	        </ul>
-	        <div id="chat"></div>
-	        <input id="guessName" type="text" placeholder="I think his name is ..." data-bind='value: guessName'/>
-            <button id="guessButton" data-bind='click: sendGuess'>Guess</button>
-	    </div>		
-	</div>
+<div id="index" class='container' data-bind='with: gameViewModel'>
+    <div data-bind='visible: isVisible'>
+        <div class="row">
+            <div class="col-md-8">
+                <div data-bind="foreach: cards">
+                    <span class="card" data-bind="event: { mouseover: $parent.onCardHover, mouseout: $parent.onCardOut }">
+                        <img class="card-img" data-bind="attr: { src: url }, click: $parent.toggleImage" />
+                    </span>
+                </div>
+                <div>
+                    <h4 id="hoverName" data-bind="text: hoverName"></h4>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img data-bind="attr: { src: targetCard().url }" />
+                <br />
+                <span>Players:</span>
+                <ul data-bind="foreach: playerNames">
+                    <li data-bind="text: $data"></li>
+                </ul>
+                <input type="text" id="chatMessage" />
+                <button id="sendMessageButton" data-bind='click: sendMessage' class='btn btn-primary'>Send</button>
+                <ul data-bind="foreach: messages">
+                    <li data-bind="text: $data"></li>
+                </ul>
+                <div id="chat"></div>
+                <input id="guessName" type="text" placeholder="I think his name is ..." data-bind='value: guessName' />
+                <button id="guessButton" data-bind='click: sendGuess'>Guess</button>
+            </div>
+        </div>
+    </div>
 </div>
-</div>
-	
-	<!-- CDN Javascript -->
-	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
-	<!-- internal scripts -->
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="GuessWho.js"></script>
+
+<!-- CDN Javascript -->
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+<!-- internal scripts -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="GuessWho.js"></script>
 </html>
