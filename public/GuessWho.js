@@ -41,9 +41,6 @@ var host = window.location.origin;
                     });
 
                     if (data.playerNames.length > 1) {
-                        GW.socketIO.emit('gameReady', {
-                            gameId: data.gameId
-                        });
                         GW.gameViewModel.isReady(true);
                     }
 

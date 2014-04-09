@@ -47,6 +47,10 @@ io.sockets.on('connection', function (socket) {
         socket.join(data.gameId);
         socket.set('playerData', data);
         socket.broadcast.to(data.gameId).emit('playerJoin', data.playerName);
+        var game = getGame(data.gameId);
+        if (game.players.length > 1) {
+            socket.broadcast.to(data.gameId).emit('gameReady');
+        }
     });
     socket.on('guess', function (guessId) {
         socket.get('playerData', function (err, data) {
@@ -62,10 +66,6 @@ io.sockets.on('connection', function (socket) {
                 socket.broadcast.to(data.gameId).emit('guess', 'You win');
             }
         });
-    });
-
-    socket.on('gameReady', function (data) {
-        socket.broadcast.to(data.gameId).emit('gameReady');
     });
 });
 
