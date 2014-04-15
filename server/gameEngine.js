@@ -6,62 +6,81 @@ var utils = require('./utils.js');
 var __dirname = '.';
 var publicDirectory = 'public';
 
+var games = [];
+
 function Game() {
+    var self = this;
+
+    self.id = uuid.v4();
+    self.title = 'Game blblblb';
+    self.players = [];
+    self.cards = getCards(24);
 
     // Returns a random cards from an array of cards or null if no cards
-    function getTargetCard(cards) {
-        if (cards != null && cards.length > 0) {
-            var randomIndex = utils.getRandomInt(0, cards.length - 1);
-            return cards[randomIndex];
+    self.getTargetCard = function() {
+        if (self.cards != null && self.cards.length > 0) {
+            var randomIndex = utils.getRandomInt(0, self.cards.length - 1);
+            return self.cards[randomIndex];
         }
         throw new Error('cards is null or empty');
-    }
+    };
 
     // Returns the opponent of the player with the specified id
-    function getOpponent(id, players) {
-        if (players[0].id == id) {
-            return players[1];
+    self.getOpponent = function (id) {
+        if (self.players[0].id == id) {
+            return self.players[1];
         }
 
-        return players[0];
-    }
-
-    return {
-        id: uuid.v4(),
-        title: 'Game blblblb',
-        players: [],
-        cards: getCards(24),
-        getTargetCard: getTargetCard,
-        getOpponent: getOpponent
+        return self.players[0];
     };
+
+    function getCards(cardCount) {
+        var fileContent = fs.readFileSync('server/database.txt', { encoding: 'utf8' });
+        var cards = JSON.parse(fileContent);
+        var cardsDeck = [];
+
+        for (var i = 0; i < cardCount; i++) {
+            cardsDeck.push(cards.splice(utils.getRandomInt(0, cards.length - 1), 1)[0]);
+        }
+
+        return cardsDeck;
+    }
 };
 
 function Player(name, targetCard) {
-    return {
-        id: uuid.v4(),
-        name: name,
-        targetCard: targetCard
-    };
+    var self = this;
+    self.id = uuid.v4();
+    self.name = name;
+    self.targetCard = targetCard;
 }
 
 function Card(imgUrl) {
-    return {
-        id: uuid.v4(),
-        imgUrl: imgUrl
-    };
+    var self = this;
+    self.id = uuid.v4();
+    self.imgUrl = imgUrl;
 }
 
-function getCards(cardCount) {
-    var fileContent = fs.readFileSync('server/database.txt', { encoding: 'utf8' });
-    var cards = JSON.parse(fileContent);
-    var cardsDeck = [];
-
-    for (var i = 0; i < cardCount; i++) {
-        cardsDeck.push(cards.splice(utils.getRandomInt(0, cards.length - 1), 1)[0]);
+// Returns the game with the specified Id or null if not found
+function getGame(id) {
+    for (var i = 0, length = games.length; i < length ; i++) {
+        if (games[i].id == id) {
+            return games[i];
+        }
     }
 
-    return cardsDeck;
+    return null;
+};
+
+// Returns the last game if ther is only one player or create a new game
+function getOrCreateGame() {
+    if (games.length <= 0 || games[games.length - 1].players.length >= 2) {
+        games.push(new Game());
+    }
+
+    return games[games.length - 1];
 }
 
 exports.Game = Game;
 exports.Player = Player;
+exports.getGame = getGame;
+exports.getOrCreateGame = getOrCreateGame;

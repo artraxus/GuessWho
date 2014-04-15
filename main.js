@@ -6,7 +6,6 @@ var gameEngine = require('./server/gameEngine.js');
 var __dirname = '.';
 var publicDirectory = 'public';
 
-var games = [];
 
 var app = express();
 app.use(express.static(path.join(__dirname, publicDirectory)));
@@ -17,13 +16,9 @@ app.get('/', function (request, response) {
 });
 
 app.post('/joingame', function (request, response) {
-    if (games.length <= 0 || games[games.length - 1].players.length >= 2) {
-        games.push(new gameEngine.Game());
-    }
-
-    var game = games[games.length - 1];
+    var game = gameEngine.getOrCreateGame();
     var playerName = request.body.playerName;
-    var targetCard = game.getTargetCard(game.cards);
+    var targetCard = game.getTargetCard();
     var player = new gameEngine.Player(playerName, targetCard);
     game.players.push(player);
 
@@ -47,15 +42,15 @@ io.sockets.on('connection', function (socket) {
         socket.join(data.gameId);
         socket.set('playerData', data);
         socket.broadcast.to(data.gameId).emit('playerJoin', data.playerName);
-        var game = getGame(data.gameId);
+        var game = gameEngine.getGame(data.gameId);
         if (game.players.length > 1) {
             socket.broadcast.to(data.gameId).emit('gameReady');
         }
     });
     socket.on('guess', function (guessId) {
         socket.get('playerData', function (err, data) {
-            var game = getGame(data.gameId);
-            var opponentPlayer = game.getOpponent(data.playerId, game.players);
+            var game = gameEngine.getGame(data.gameId);
+            var opponentPlayer = game.getOpponent(data.playerId);
 
             if (opponentPlayer.targetCard.id == guessId) {
                 socket.emit('guess', 'you win !!');
@@ -68,14 +63,3 @@ io.sockets.on('connection', function (socket) {
         });
     });
 });
-
-// Returns the game with the specified Id or null if not found
-function getGame(id) {
-    for (var i = 0, length = games.length; i < length ; i++) {
-        if (games[i].id == id) {
-            return games[i];
-        }
-    }
-
-    return null;
-};
