@@ -84,6 +84,20 @@
             <span>Waiting for an opponent...</span>
         </div>
     </div>
+    <div data-bind="visible: isWinner">
+        <div class="row">
+            <img src="http://www.horsenation.com/wp-content/uploads/2013/05/my-little-pony-friendship-is-magic-brony-you-win.gif" />
+            <br />
+            <span>You win !</span>
+        </div>
+    </div>
+    <div data-bind="visible: isLooser">
+        <div class="row">
+            <img src="http://auto.img.v4.skyrock.net/9405/42679405/pics/1711179692.jpg" />
+            <br />
+            <span>Your opponent found the right card !</span>
+        </div>
+    </div>
 </div>
 
 <!-- CDN Javascript -->

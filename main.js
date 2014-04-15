@@ -53,12 +53,12 @@ io.sockets.on('connection', function (socket) {
             var opponentPlayer = game.getOpponent(data.playerId);
 
             if (opponentPlayer.targetCard.id == guessId) {
-                socket.emit('guess', 'you win !!');
-                socket.broadcast.to(data.gameId).emit('guess', 'You LOOSE ');
+                socket.emit('guess', true);
+                socket.broadcast.to(data.gameId).emit('guess', false);
             }
             else {
-                socket.emit('guess', 'LOOZER');
-                socket.broadcast.to(data.gameId).emit('guess', 'You win');
+                socket.emit('guess', false);
+                socket.broadcast.to(data.gameId).emit('guess', true);
             }
         });
     });

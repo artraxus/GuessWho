@@ -78,6 +78,8 @@ var host = window.location.origin;
         _self.hoverName = ko.observable('');
         _self.isGuessing = ko.observable(false);
         _self.isReady = ko.observable(false);
+        _self.isWinner = ko.observable(false);
+        _self.isLooser = ko.observable(false);
 
         //commands	
         _self.sendMessage = function () {
@@ -143,8 +145,13 @@ var host = window.location.origin;
             _self.playerNames.push(playerName);
         });
 
-        GW.socketIO.on('guess', function (message) {
-            alert(message);
+        GW.socketIO.on('guess', function (isWinner) {
+            _self.isVisible(false);
+            if (isWinner) {
+                _self.isWinner(true);
+            } else {
+                _self.isLooser(true);
+            }
         });
 
         GW.socketIO.on('gameReady', function () {
