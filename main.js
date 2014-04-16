@@ -62,4 +62,12 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });
+    socket.on('disconnect', function () {
+        socket.get('playerData', function (err, data) {
+            if (data != null) {
+                socket.broadcast.to(data.gameId).emit('opponentdisconnect');
+                gameEngine.removeGame(data.gameId);
+            }
+        });
+    });
 });

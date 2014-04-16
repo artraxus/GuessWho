@@ -80,6 +80,7 @@ var host = window.location.origin;
         _self.isReady = ko.observable(false);
         _self.isWinner = ko.observable(false);
         _self.isLooser = ko.observable(false);
+        _self.isAlone = ko.observable(false);
 
         //commands	
         _self.sendMessage = function () {
@@ -156,6 +157,11 @@ var host = window.location.origin;
 
         GW.socketIO.on('gameReady', function () {
             _self.isReady(true);
+        });
+
+        GW.socketIO.on('opponentdisconnect', function () {
+            _self.isVisible(false);
+            _self.isAlone(true);
         });
 
         function resetFocusOnChat() {

@@ -17,7 +17,7 @@ function Game() {
     self.cards = getCards(24);
 
     // Returns a random cards from an array of cards or null if no cards
-    self.getTargetCard = function() {
+    self.getTargetCard = function () {
         if (self.cards != null && self.cards.length > 0) {
             var randomIndex = utils.getRandomInt(0, self.cards.length - 1);
             return self.cards[randomIndex];
@@ -77,10 +77,30 @@ function getOrCreateGame() {
         games.push(new Game());
     }
 
+    console.log('iuergerè_uegr ' + games.length);
+
     return games[games.length - 1];
-}
+};
+
+function removeGame(gameId) {
+    var gameIndex = 0;
+    var game = null;
+
+    for (var i = 0, length = games.length; i < length ; i++) {
+        if (games[i].id == gameId) {
+            gameIndex = i;
+            game = games[i];
+        }
+    }
+
+    if (game != null) {
+        games.splice(gameIndex, 1);
+        delete game;
+    }
+};
 
 exports.Game = Game;
 exports.Player = Player;
 exports.getGame = getGame;
 exports.getOrCreateGame = getOrCreateGame;
+exports.removeGame = removeGame;
