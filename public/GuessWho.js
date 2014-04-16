@@ -1,5 +1,5 @@
 var GuessWho = {};
-var host = window.location.origin;
+var host = window.location.origin || window.location.protocol + '//' + window.location.host;
 
 // socketIO
 (function (GW) {

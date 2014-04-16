@@ -77,8 +77,6 @@ function getOrCreateGame() {
         games.push(new Game());
     }
 
-    console.log('iuergerè_uegr ' + games.length);
-
     return games[games.length - 1];
 };
 
